@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'login.dart';
 import 'welcome.dart';
+import 'notes.dart';
 
 Future<void> main() async {
  WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,7 @@ class AuthGate extends StatelessWidget {
      stream: FirebaseAuth.instance.authStateChanges(),
      builder: (_, snap) {
        if (snap.connectionState == ConnectionState.waiting) {
-return const Scaffold(
+         return const Scaffold(
            body: Center(child: CircularProgressIndicator()),
          );
        }
@@ -48,12 +49,30 @@ class HomePage extends StatelessWidget {
 
  @override
  Widget build(BuildContext context) {
+   final user = FirebaseAuth.instance.currentUser;
    return Scaffold(
      appBar: AppBar(title: const Text("Home")),
      drawer: Drawer(
        child: ListView(
          padding: EdgeInsets.zero,
          children: [
+           UserAccountsDrawerHeader(
+             accountName: Text(user?.displayName ?? "Usuário"),
+             accountEmail: Text(user?.email ?? ""),
+             currentAccountPicture: const CircleAvatar(
+               child: Icon(Icons.person),
+             ),
+           ),
+           ListTile(
+             leading: const Icon(Icons.note),
+             title: const Text('Anotações'),
+             onTap: () async {
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) => const NotesPage()),
+               );
+             },
+           ),
            ListTile(
              leading: const Icon(Icons.logout),
              title: const Text('Sair'),
@@ -67,4 +86,6 @@ class HomePage extends StatelessWidget {
      body: const Center(child: WelcomeMessage()),
    );
  }
-}
+}git add .
+git commit -m “Semana 5”
+git push origin semana5
